@@ -423,4 +423,72 @@ junta os arquivos um ao lado do outro
 join lista1.txt lista2.txt
 junta os arquivos um ao lado do outro verificando o índice dos arquivos
 ******************************************************************************************
-
+cut = remover seções de cada linha dos arquivos
+head /tmp/passwd
+head -n 10 /tmp/passwd |cut -d ":" -f 1
+-d = delimitador
+-f = field (campo)
+******************************************************************************************
+head -n 10 /tmp/passwd |cut -d ":" -f 1,7
+******************************************************************************************
+head -n 10 /tmp/passwd |cut -d ":" -f 1,7 --output-delimiter="@@@"
+--output-delimiter = insere delimitador entre campos na tela
+******************************************************************************************
+awk = padrão de varredura e linguagem de processamento de texto
+head -n 10 /tmp/passwd |awk -F ":" '{ print "Login: "$1,"\nShell: "$7 }'
+-F = delimitador
+$1 = campo
+\n = nova linha
+******************************************************************************************
+head -n 10 /tmp/passwd |awk -F ":" '{ print NR,"Login: "$1,"\nShell: "$7 }'
+NR = número da linha
+******************************************************************************************
+cat /tmp/passwd
+uid < 1000 = usuários de sistema
+cat /tmp/passwd |awk -F ":" '$3 >= 1000 {print $0}'
+$0 = linha inteira
+******************************************************************************************
+cat /tmp/passwd |awk -F ":" '$3 >= 1000 {print $1,$3}'
+******************************************************************************************
+ls /etc/ |awk /conf/
+/ / = localização de string
+ls /etc/ |awk /conf$/
+/conf$/ - localiza arquivos que tem conf no final
+******************************************************************************************
+cat /tmp/shadow  |awk -F ":" 'length($2) > 2 {print $0}'
+******************************************************************************************
+cut
+-b → Exibe conteúdo em relação a bytes
+-c → Exibe conteúdo em relação a caracteres
+-f → Exibe colunas (campos) especificos
+-d → Define o delimitador de colunas para o cut
+-s → Ignora linhas sem o delimitador especificado
+--output-delimiter → Define delimitador para exibição
+******************************************************************************************
+cat /tmp/passwd | cut -d ":" -f1,3
+cat /tmp/passwd | cut -d ":" -f1,3 --output-delimiter=".::."
+cat /tmp/passwd | cut -c 1-10
+cat /tmp/passwd | cut -b 1-20
+cat /etc/ssh/sshd_config | cut -d "#" -f1,2
+******************************************************************************************
+awk
+-F → Delimitador de colunas
+print → Exibe campo(s) especifico(s) na saída
+$N → Onde N é o número da coluna a ser exibida
+FS → Separador de campos
+NR → Número de linhas
+NF → Números de campos em linha
+, → Insere um espaço entre as colunas
+******************************************************************************************
+cat /tmp/passwd | awk -F: '{print $1,$3}'
+cat /tmp/passwd | awk -F: '$3 >= 1000 {print $1}'
+awk -F: '$3 >= 500{print NR,$1}' /tmp/passwd
+ls /etc | awk /conf$/
+cat /tmp/passwd | awk -F: '$3 >=1000 {print $1FS$3}'
+awk -F: '$3 >= 1000{print NR,$1FS$3}' /tmp/passwd
+awk -F: 'length($2) > 2{print $0}' /tmp/shadow
+awk 'END {print NR}' /etc/group
+cat /tmp/passwd | awk 'NR % 2 ==0 {print NR,$0}'
+cat /tmp/passwd | awk 'NR % 2 !=0 {print NR,$0}'
+ls -l /etc/ | awk 'NR !=1 {print "Name:",$9,"Perm:",$1,"Length:",$5}'
+nl /etc/services
