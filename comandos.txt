@@ -172,13 +172,15 @@ ls /etc/*.conf 1>  lista.txt
 lista todos os arquivos que terminam com *.conf no diretório /etc 
 e salva no arquivo
 *******************************************************************************
->  
-se não existe, cria um arquivo, 
-se existe, sobrescreve o arquivo existente
-*******************************************************************************
->>
-se não existe, cria um arquivo, 
-se existe, incrementa o arquivo existente
+> → Redireciona stdout, cria ou sobrescreve arquivo
+>> → Redireciona stdout, cria ou incrementa arquivo
+< → Igual ao > mas com fluxo da direita para esquerda
+<< → Igual ao >> mas com fluxo da direita para esquerda
+2> → Redireciona stderr, cria ou sobrescreve arquivo
+2>> → Redireciona stderr, cria ou incrementa arquivo
+&> → Redireciona stdout e stderr, cria arquivo
+&>> → Redireciona stdout e stderr, cria ou incrementa arquivo
+2>&1 → Igual a &>
 *******************************************************************************
 find / -size +40M 
 localiza arquivos maiores que 40MB a partir do diretório raiz
@@ -279,7 +281,7 @@ grep -n --color analista /tmp/passwd -A 2 -B 2
 *******************************************************************************
 Expressões Regulares
 *******************************************************************************
-^   inicio de linha
+^   início de linha
 [intervalo de caracteres]
 ^[sS$][eE&][xX][oO0]
 *******************************************************************************
@@ -291,3 +293,134 @@ busca no arquivo por palavras que comecem com a,b,c,d
 *******************************************************************************
 egrep --color '^bin|^root' /tmp/passwd 
 busca no arquivo por palavras que comecem com bin ou com root
+******************************************************************************************
+Dia 2 - 05/12/2021
+******************************************************************************************
+cp /etc/passwd /tmp/
+cd /tmp
+cat passwd
+egrep --color '^[a-c]' /tmp/passwd 
+busca resultados que comecem com a,b,c
+******************************************************************************************
+egrep --color 'daemon|var' /tmp/passwd 
+busca resultados no arquivo indicado que contenham a palavra daemon ou var
+******************************************************************************************
+egrep --color 'nologin$' /tmp/passwd 
+busca resultados no arquivo indicado que terminem com nologin
+******************************************************************************************
+egrep --color -n '^....:' /tmp/passwd
+busca resultados no arquivo indicado que contenham qualquer caracter nas primeiras quatro posições e ":" na quinta posição
+******************************************************************************************
+^ = início
+$ = fim
+| = ou
+. = qualquer caracter
+(..) .....-....
+******************************************************************************************
+cp /etc/shadow   /tmp/
+head /tmp/shadow
+fgrep --color $ /tmp/shadow 
+fgrep é usado em buscas onde se precisa desconsiderar os metacaracteres
+******************************************************************************************
+apt install locate = instala o locate
+updatedb = atualiza a base de dados
+locate nsswitch = localiza arquivos que contenham a palavra chave
+locate passwd
+locate -c passwd = mostra a quantidade de resultados encontrados na busca
+locate -i passwd = não faz distinção entre maiúsculas e minúsculas na busca
+******************************************************************************************
+Caracteres curingas
+? → Este curinga substitui um caractere qualquer
+* → Este curinga substitui todos caracteres
+! → Este curinga atua como negação de ação
+[ ] → Este curinga exibe uma lista ou intervalo de objetos
+{ } → Este curinga cria uma lista ou intervalo de objetos
+******************************************************************************************
+cd /etc
+ls -ld su*
+d = lista diretório
+su* =  começa com su e depois por ter qualquer coisa
+******************************************************************************************
+ls -ld /etc/*.conf = tem que terminar com .conf
+ls -ld /etc/a*.conf = começa com a e termina com .conf
+ls -ld /etc/[abcd]*.conf = começa ou com a ou b ou c ou d e termina com .conf
+ls -ld /etc/*.??? = termina com três caracteres quaisquer depois do .
+ls -ld /etc/*.{???,????} = termina com três ou quatro caracteres quaisquer depois do .
+ ls -ld /etc/*.{gen,defs} = termina com gen ou defs depois do .
+ls -ld /etc/[a-dA-D]*.conf começa com qualquer caracter de a até d [maiúsculo ou minúsculo] 
+******************************************************************************************
+dd = converte e copia um arquivo
+dd if=/etc/hosts of=/opt/hosts status=progress
+if = origem
+of = destino
+******************************************************************************************
+dd if=/dev/sda  of=/dev/sdb
+clona o disco sda para o disco sdb
+******************************************************************************************
+dd if=/dev/sda  of=/tmp/mbr.img bs=512 count=1
+clona a mbr do disco sda
+bs= block size (tamanho da mbr)
+count = quantidade de blocos
+******************************************************************************************
+dd if=/tmp/mbr.img    of=/dev/sda
+restaura a imagem da mbr para o disco sda
+******************************************************************************************
+/dev/null - joga o arquivo para o limbo
+/dev/zero - preenche o arquivo com zeros
+******************************************************************************************
+dd if=/dev/zero  of=/var/swap01 bs=100M count=1 status=progress
+copiado um arquivo de 100M cheio de zeros
+******************************************************************************************
+lsblk = lista dispositivos de bloco
+mkswap /var/swap01 = cria arquivo de swap
+swapon = ativa a swap
+swapoff = desativa a swap
+free -m = verificando o tamanho da swap
+swapon -s = mostra o uso da swap por dispositivo
+******************************************************************************************
+dd if=/dev/zero  of=/tmp/arquivo.img count=1 bs=100M
+split -b 20M -d  /tmp/arquivo.img  /opt/novoarq- --verbose
+split = dividir arquivo em partes menores (preserva o arquivo original)
+-d = final numérico
+-b = bytes
+--verbose = mostra os detalhes
+******************************************************************************************
+cat /opt/novoarq-0* > /tmp/joinarq.img
+junta as partes do arquivos 
+******************************************************************************************
+diff /tmp/arquivo.img /tmp/joinarq.img -s
+compara se os arquivos são idênticos
+******************************************************************************************
+cat > nomes.txt
+cat nomes.txt
+******************************************************************************************
+sort nomes.txt
+imprime na tela o arquivo organizado em ordem alfabética
+******************************************************************************************
+sort -r nomes.txt
+-r = reverso
+******************************************************************************************
+cat > nomes2.txt
+uniq - reporta ou omite linhas repetidas
+uniq nomes2.txt = omite nomes repetidos que estão organizados de forma sequencial
+sort nomes2.txt  |uniq = organiza em ordem alfabética e depois omite os repetidos
+sort nomes2.txt  |uniq -d
+-d = imprime só os repetidos
+sort nomes2.txt  |uniq -D
+-D = mostra todas as linhas duplicadas
+sort nomes2.txt  |uniq -c
+-c = faz a contagem das duplicações
+******************************************************************************************
+cat > lista1.txt
+cat > lista2.txt
+******************************************************************************************
+cat lista1.txt lista2.txt
+junta os arquivos um depois do outro
+******************************************************************************************
+paste lista1.txt lista2.txt
+junta os arquivos um ao lado do outro
+******************************************************************************************
+join lista1.txt lista2.txt
+junta os arquivos um ao lado do outro verificando o índice dos arquivos
+******************************************************************************************
+
