@@ -492,3 +492,137 @@ cat /tmp/passwd | awk 'NR % 2 ==0 {print NR,$0}'
 cat /tmp/passwd | awk 'NR % 2 !=0 {print NR,$0}'
 ls -l /etc/ | awk 'NR !=1 {print "Name:",$9,"Perm:",$1,"Length:",$5}'
 nl /etc/services
+******************************************************************************************
+find = localizar arquivos
+-iname = faz distinção de maiúsculas e minúsculas
+-name = não faz distinção de maiúsculas e minúsculas
+-user =  pesquisa arquivos de um determinado usuário
+-uid = pesquisa pelo uid do usuário
+-size  = pesquisa por tamanho do arquivo
+-exec comando {}  \;
+-maxdepth = nível máximo de profundidade
+******************************************************************************************
+find / -name passwd*
+find / -user analista 2> /dev/null
+find / -iname imagens -user analista  2> /dev/null
+find / -iname imagens -uid 1000 2> /dev/null
+find / -size +10M  -size -50M 2> /dev/null
+find / -iname *.deb -size +10M  -size -50M 2> /dev/null
+find / -size +10M -size -50M -exec ls -lh {} \; 2> /dev/null
+find / -size +10M -size -50M -exec du -h {} \; 2> /dev/null
+******************************************************************************************
+-type = procura por tipo
+b → Arquivos de dispositivos de bloco
+c → Arquivos de dispositivos de entrada de caracteres
+d → Diretórios
+f → Arquivos regulares, comuns
+l → Links simbólicos
+p → Pipes, Named Pipes (FIFO)
+s → Arquivos de sockets
+******************************************************************************************
+find /etc -type l
+find /etc/ -type d
+find /etc/ -type f -maxdepth 2
+******************************************************************************************
+-amin = acessado a x minutos
+-cmin = alterado a x minutos (permissão)
+-mmin = modificado a x minutos (conteúdo)
+-atime = acessado a x dias
+-ctime = alterado a x dias (permissão)
+-mtime = modificado a x dias (conteúdo)
+******************************************************************************************
+find /tmp -amin -30
+find /tmp -amin -30 -exec stat {} \;
+find / -user analista -mmin -10 2> /dev/null
+find /home/ -user analista -mtime -1 -exec stat {} \; 2> /dev/null
+******************************************************************************************
+find / -size +50M 2> /dev/null  | xargs du -h
+xargs = pega o argumento de cada linha do resultado e executa o comando passado
+******************************************************************************************
+cp /etc/fstab /var/backups/
+cat /etc/fstab
+******************************************************************************************
+sed = editor para transformar e filtrar texto
+-e = altera apenas na tela
+-i = altera no arquivo
+******************************************************************************************
+sed -e '/^#/d' /etc/fstab
+'/^#/d' = pesquisa linhas que começam com #
+d = deleta a linha toda
+******************************************************************************************
+sed -i '/^#/d' /etc/fstab
+******************************************************************************************
+blkid - localiza/imprime atributos de dispositivos de bloco
+blkid |awk -F " " '{ print $2}' |sed -e s'|"||g'
+s = substitui
+'/"//g' substitui " por nada
+g = global (tudo)
+******************************************************************************************
+vim - Vi IMproved, a programmer's text editor
+******************************************************************************************
+Colocar o vim como editor padrão
+update-alternatives --config editor
+2
+******************************************************************************************
+modo linha de comando
+:w - salvar
+:q - sair
+:wq - salvar e sair
+:q! - força a saída
+:w /tmp/doc02.txt - salvar como
+:qa - sai de todos os arquivos
+:x - salvar e sair
+ZZ - salvar e sair
+******************************************************************************************
+modo de inserção
+insert
+i
+i
+o
+O
+a
+A
+******************************************************************************************
+modo de comando
+h - esquerda
+j - baixo
+k - cima
+l - direita
+v - visual
+y = copiar
+p = colar
+V = Visual/linha
+3Y = copia 3 linhas
+3yy = copia 3 linhas
+5dd = recorta 5 linhas
+dd = recorta uma linha
+d5d = recorta 5 linhas
+x = apaga caracter
+X = apaga (backspace)
+ctrl + z = não usar
+u = desfazer
+ctrl + r = refazer
+/ buscar de cima pra baixo
+? buscar de baixo pra cima
+/linux
+n - busca a próxima ocorrência
+:%s/linux/tux/g - substitui palavra g - global
+:! date - executa comando fora do vim
+:r! date - executa comando e coloca resultado dentro do vim
+:r! find / -size +40M 2> /dev/null
+:set number - coloca o número das linhas no editor 
+
+:set ic - habilita busca sendo maiúsculas e minúsculas
+vim /etc/vim/vimrc - alterar arquivo de configuração do vim
+    syntax on
+    set ignorecase
+    set incsearch
+    set autowrite
+    set number
+
+:vsplit /tmp/doc02.txt - divide a tela na vertical
+ctrl + ww - alterna entre os arquivos
+:qa! - sai de todos os arquivos abertos
+G = vai pro final do arquivo
+gg = vai pro início do arquivo
+******************************************************************************************
