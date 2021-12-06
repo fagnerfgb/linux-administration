@@ -612,7 +612,7 @@ n - busca a próxima ocorrência
 :r! find / -size +40M 2> /dev/null
 :set number - coloca o número das linhas no editor 
 
-:set ic - habilita busca sendo maiúsculas e minúsculas
+:set ignorecase - habilita busca sendo maiúsculas e minúsculas
 vim /etc/vim/vimrc - alterar arquivo de configuração do vim
     syntax on
     set ignorecase
