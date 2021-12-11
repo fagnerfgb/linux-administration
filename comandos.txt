@@ -929,8 +929,242 @@ cpio -iv < srv/backup/gitfagner.cpio
 tar -xvf /srv/backup/gitfagner.tar -C /tmp/
 -x = extrair
 -C = local de destino
+******************************************************************************************
+Redes
+******************************************************************************************
+máquina Intranet
+server
+dns
+webserver
+enp0s3 - rede interna - 192.168.1.10
+enp0s8 - rede interna - 192.168.1.11
+******************************************************************************************
+vim /etc/network/interfaces
+******************************************************************************************
+# Configurando placa de rede com ip estático 
+auto enp0s3 
+iface enp0s3 inet static 
+    address 192.168.1.10 
+    netmask 255.255.255.0 
+    gateway 192.168.1.1
 
-
+# Configurando placa de rede com ip estático 
+auto enp0s8 
+iface enp0s8 inet static 
+    address 192.168.1.11 
+    netmask 255.255.255.0 
+:x!
+******************************************************************************************
+vim /etc/resolv.conf
+******************************************************************************************
+# Configurando o DNS
+search asf.com
+domain asf.com
+nameserver 8.8.8.8
+nameserver 192.168.1.10
+nameserver 192.168.1.20
+:x!
+******************************************************************************************
+# Alterando o atributo do arquivo para que ele não possa ser alterado
+chattr +i /etc/resolv.conf
+******************************************************************************************
+# Alterando o nome da máquina
+hostnamectl set-hostname intranet.asf.com
+******************************************************************************************
+systemctl restart networking
+ip a
+ip route
+shutdown -r now
+******************************************************************************************
+máquina Datacenter
+server
+dns
+e-mail
+enp0s3 - rede interna - 192.168.1.20
+******************************************************************************************
+vim /etc/network/interfaces
+******************************************************************************************
+# Configurando placa de rede com ip estático 
+auto enp0s3 
+iface enp0s3 inet static 
+    address 192.168.1.20 
+    netmask 255.255.255.0 
+    gateway 192.168.1.1
+:x!
+******************************************************************************************
+vim /etc/resolv.conf
+******************************************************************************************
+# Configurando o DNS
+search asf.com
+domain asf.com
+nameserver 8.8.8.8
+nameserver 192.168.1.10
+nameserver 192.168.1.20
+:x!
+******************************************************************************************
+# Alterando o atributo do arquivo para que ele não possa ser alterado
+chattr +i /etc/resolv.conf
+******************************************************************************************
+# Alterando o nome da máquina
+hostnamectl set-hostname datacenter.asf.com
+******************************************************************************************
+systemctl restart networking
+ip a
+ip route
+shutdown -r now
+******************************************************************************************
+máquina Storage
+server
+dhcp
+nfs
+enp0s3 - rede interna - 192.168.1.30
+******************************************************************************************
+vim etc/sysconfig/network-scripts/ifcfg-enp0s3
+******************************************************************************************
+# Configurando placa de rede com ip estático 
+TYPE="Ethernet"
+BOOTPROTO"static"
+NAME="enp0s3"
+DEVICE="enp0s3"
+ONBOOT="yes"
+IPADDR=192.168.1.30
+NETMASK=255.255.255.0
+GATEWAY=192.168.1.1
+:x!
+******************************************************************************************
+vim /etc/resolv.conf
+******************************************************************************************
+# Configurando o DNS
+search asf.com
+domain asf.com
+nameserver 8.8.8.8
+nameserver 192.168.1.10
+nameserver 192.168.1.20
+:x!
+******************************************************************************************
+# Alterando o atributo do arquivo para que ele não possa ser alterado
+chattr +i /etc/resolv.conf
+******************************************************************************************
+# Alterando o nome da máquina
+hostnamectl set-hostname storage.asf.com
+******************************************************************************************
+ifdown enp0s3
+ifup enp0s3
+ip a
+ip route
+shutdown -r now
+******************************************************************************************
+máquina Gateway
+server
+proxy
+firewall
+vpn
+roteador
+enp0s3 - nat (pra sair pra internet) - 10.0.2.15
+enp0s8 - rede interna - 192.168.1.1
+******************************************************************************************
+ensp0s9 - host only 
+No Gerenciador de Redes do Hospedeiro do VirtualBox
+VirtualBox Host-Only Ethernet Adapter
+IP: 200.50.100.1
+Máscara: 255.255.255.0
+Não Habilitar DHCP
+******************************************************************************************
+vim etc/sysconfig/network-scripts/ifcfg-enp0s8
+******************************************************************************************
+# Configurando placa de rede com ip estático 
+TYPE="Ethernet"
+BOOTPROTO"static"
+NAME="enp0s8"
+DEVICE="enp0s8"
+ONBOOT="yes"
+IPADDR=192.168.1.1
+NETMASK=255.255.255.0
+:x!
+******************************************************************************************
+vim etc/sysconfig/network-scripts/ifcfg-enp0s9
+******************************************************************************************
+# Configurando placa de rede com ip estático 
+TYPE="Ethernet"
+BOOTPROTO"static"
+NAME="enp0s9"
+DEVICE="enp0s9"
+ONBOOT="yes"
+IPADDR1=200.50.100.10
+IPADDR1=200.50.100.20
+NETMASK=255.255.255.0
+:x!
+******************************************************************************************
+vim /etc/resolv.conf
+******************************************************************************************
+# Configurando o DNS
+search asf.com
+domain asf.com
+nameserver 8.8.8.8
+nameserver 192.168.1.10
+nameserver 192.168.1.20
+:x!
+******************************************************************************************
+# Alterando o atributo do arquivo para que ele não possa ser alterado
+chattr +i /etc/resolv.conf
+******************************************************************************************
+# Alterando o nome da máquina
+hostnamectl set-hostname storage.asf.com
+******************************************************************************************
+ifdown enp0s8
+ifdown enp0s9
+ifup enp0s8
+ifup enp0s9
+ip a
+ip route
+shutdown -r now
+******************************************************************************************
+máquina Cliente Interno
+enp0s3 - rede interna - 192.168.1.100
+cd /etc/network
+vim interfaces
+******************************************************************************************
+# Configurando placa de rede com ip estático 
+auto enp0s3 
+iface enp0s3 inet static 
+    address 192.168.1.100 
+    netmask 255.255.255.0 
+    gateway 192.168.1.1
+:x!
+******************************************************************************************
+vim /etc/resolv.conf
+******************************************************************************************
+# Configurando o DNS
+search asf.com
+domain asf.com
+nameserver 8.8.8.8
+nameserver 192.168.1.10
+nameserver 192.168.1.20
+:x!
+******************************************************************************************
+# Alterando o atributo do arquivo para que ele não possa ser alterado
+chattr +i /etc/resolv.conf
+******************************************************************************************
+# Alterando o nome da máquina
+hostnamectl set-hostname interno.asf.com
+******************************************************************************************
+vim /etc/hosts
+******************************************************************************************
+192.168.1.100 	interno.asf.com 	interno
+192.168.1.10 	intranet.asf.com 	intranet
+192.168.1.11 	express.asf.com		express
+192.168.1.20	datacenter.asf.com	datacenter
+192.168.1.30 	storage.asf.com		storage
+192.168.1.1	    gateway.asf.com		gateway
+:x!
+******************************************************************************************
+systemctl restart networking
+ip a
+ip route
+shutdown -r now
+******************************************************************************************
+máquina Cliente Externo
+enp0s3 - host only
 
 
 
