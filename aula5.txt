@@ -1,0 +1,73 @@
+#Autor: Fagner Geraldes Braga
+#Data de criação: 12/12/2021
+#Data de atualização: 12/12/2021
+#Versão: 0.01
+******************************************************************************************
+Dia 5 - 12/12/2021
+******************************************************************************************
+Configuração do Firewall IPTABLES
+******************************************************************************************
+Máquina Gateway
+******************************************************************************************
+# Verifica o status do firewalld no CentOS
+systemctl status firewalld
+******************************************************************************************
+# Parar e desabilitar o firewalld 
+systemctl stop firewalld
+systemctl disable firewalld
+******************************************************************************************
+# Instalação do serviço do IPTABLES
+yum install iptables-services -y
+******************************************************************************************
+# Habilitar o serviço do IPTABLES
+systemctl enable iptables
+******************************************************************************************
+# Configurar o roteamento
+vim /etc/sysctl.conf
+    net.ipv4.ip_forward=1
+:x!
+******************************************************************************************
+# Mostra as configurações do sysctl
+sysctl -p
+******************************************************************************************
+# Instalação do Git
+yum install git -y
+******************************************************************************************
+# Clonagem de repositório
+cd /root/
+git clone https://github.com/rogerramossilva/linuxforce
+******************************************************************************************
+# Copiar arquivo firewall.sh para o diretório /sbin
+cp /root/linuxforce/gateway/sbin/firewall.sh  /sbin/
+******************************************************************************************
+# Habilitar IPTABLES
+firewall.sh
+******************************************************************************************
+# Mostra as configurações do Firewall
+iptables -L
+******************************************************************************************
+Ligar máquina storage
+******************************************************************************************
+# Testar se computador possui internet
+ping www.terra.com.br
+******************************************************************************************
+# Parar e desabilitar o firewalld 
+systemctl stop firewalld
+systemctl disable firewalld
+******************************************************************************************
+# Instalação do Git e do DHCP Server
+yum install git dhcp-server -y
+******************************************************************************************
+# Clonagem de repositório
+cd /root/
+git clone https://github.com/rogerramossilva/linuxforce
+******************************************************************************************
+# Copiar arquivo dhcpd.conf para o diretório /etc/dhcp
+cp /root/linuxforce/storage/dhcp/dhcpd.conf /etc/dhcp
+******************************************************************************************
+Discovery
+Offer
+Request
+Ack
+******************************************************************************************
+

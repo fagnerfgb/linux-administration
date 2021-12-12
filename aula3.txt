@@ -1,0 +1,140 @@
+#Autor: Fagner Geraldes Braga
+#Data de criação: 12/12/2021
+#Data de atualização: 12/12/2021
+#Versão: 0.01
+******************************************************************************************
+Dia 3 - 06/12/2021
+******************************************************************************************
+ls -l /dev/sda*
+file /dev/sda*
+stat /dev/sda
+******************************************************************************************
+cd /var/
+mkdir audit
+cd audit/
+script block.txt = grava tudo o que é digitado no terminal num arquivo
+exit = para a gravação
+******************************************************************************************
+lsblk = lista os blocos
+******************************************************************************************
+fdisk -l = manipula tabela de partição de disco
+-l = lista as tabelas de partição
+******************************************************************************************
+df -vhT = relata o espaço de disco usado pelo sistema de arquivo
+-h = humano
+-T = imprime o tipo do sistema de arquivos
+-v = pode ignorar. Para compatibilidade com versões anteriores
+******************************************************************************************
+df -i
+-i = inodes
+******************************************************************************************
+lsblk  -f
+-f  = informações sobre os sistemas de arquivos
+******************************************************************************************
+1 - device
+2 - label
+3 - UUID
+******************************************************************************************
+mount - monta um sistema de arquivos
+/dev/sda1 on /boot type ext2 (rw,relatime)
+/dev/mapper/interno--vg-root on / type ext4 (rw,relatime,errors=remount-ro)
+******************************************************************************************
+cat /proc/partitions = mostra informações dos blocos
+******************************************************************************************
+blkid = mostra os ids dos blocos
+******************************************************************************************
+du - uso do disco
+du -sh * 2> /dev/null
+******************************************************************************************
+uptime = mostra quanto tempo o sistema está ligado e quantos usuários estão logados e a 
+média de carga do sistema
+******************************************************************************************
+top - mostra processos do Linux
+******************************************************************************************
+htop = visualizador de processos interativo
+apt install htop -y
+******************************************************************************************
+free = mostra a quantidade de memória livre e utilizada no sistema
+-m = mebibytes
+-h = humano
+******************************************************************************************
+cat /proc/meminfo
+cat /proc/swaps = swapon -s
+cat /proc/cpuinfo
+******************************************************************************************
+lscpu = mostra informações sobre a arquitetura do processador
+lsusb = lista dispositivos USB
+-v = verbose
+lspci = lista todos os dispositivos PCI
+-k = mostra drivers do kernel
+-v = verbose
+-vv =  muito verbose
+-vvv = super verbose
+******************************************************************************************
+lshw - lista hardware
+apt install lshw -y
+******************************************************************************************
+Command line system information script for console and IRC
+apt install inxi -y
+inxi -Fxz
+******************************************************************************************
+Máquina Intranet 
+Criar 2 discos de 10GB cada no VirtualBox
+******************************************************************************************
+Máquina Cliente Interno
+Criar 2 discos de 10GB cada no VirtualBox
+******************************************************************************************
+Máquina Storage
+Criar 7 discos de 10GB cada no VirtualBox
+******************************************************************************************
+Particionamento de discos
+******************************************************************************************
+1 - particionar
+2 - formatar
+3 - montar 
+******************************************************************************************
+Particionar o disco sdb com 2 partições de 5GB
+******************************************************************************************
+partição 1
+fdisk /dev/sdb
+n = adiciona uma nova partição
+p = primária
+1
+enter
++5G
+******************************************************************************************
+partição 2
+n
+p
+enter
+enter
+enter
+w = grava e sai
+******************************************************************************************
+Particionar o disco sdc com 1 partição de 10GB
+******************************************************************************************
+fdisk /dev/sdc
+n = adiciona uma nova partição
+p = primária
+enter
+enter
+enter
+w
+******************************************************************************************
+lsblk
+******************************************************************************************
+Formatar as partições dos discos
+******************************************************************************************
+apt install vim  xfsprogs parted -y
+mkfs -t xfs /dev/sdb1
+mkfs -t xfs /dev/sdb2
+mkfs -t xfs /dev/sdc1
+******************************************************************************************
+lsblk -f
+******************************************************************************************
+Colocando o Label nas partições
+******************************************************************************************
+xfs_admin -L express /dev/sdb1
+xfs_admin -L asf  /dev/sdb2
+xfs_admin -L logs /dev/sdc1
+******************************************************************************************
