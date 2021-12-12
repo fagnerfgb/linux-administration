@@ -1,7 +1,7 @@
 #Autor: Fagner Geraldes Braga
 #Data de criação: 12/12/2021
 #Data de atualização: 12/12/2021
-#Versão: 0.01
+#Versão: 0.02
 ******************************************************************************************
 Dia 5 - 12/12/2021
 ******************************************************************************************
@@ -35,10 +35,10 @@ yum install git -y
 ******************************************************************************************
 # Clonagem de repositório
 cd /root/
-git clone https://github.com/rogerramossilva/linuxforce
+git clone https://github.com/fagnerfgb/linux-administration
 ******************************************************************************************
 # Copiar arquivo firewall.sh para o diretório /sbin
-cp /root/linuxforce/gateway/sbin/firewall.sh  /sbin/
+cp /root/linux-administration/gateway/sbin/firewall.sh  /sbin/
 ******************************************************************************************
 # Habilitar IPTABLES
 firewall.sh
@@ -60,10 +60,10 @@ yum install git dhcp-server -y
 ******************************************************************************************
 # Clonagem de repositório
 cd /root/
-git clone https://github.com/rogerramossilva/linuxforce
+git clone https://github.com/fagnerfgb/linux-administration
 ******************************************************************************************
 # Copiar arquivo dhcpd.conf para o diretório /etc/dhcp
-cp /root/linuxforce/storage/dhcp/dhcpd.conf /etc/dhcp
+cp /root/linux-administration/storage/dhcp/dhcpd.conf /etc/dhcp
 ******************************************************************************************
 Discovery
 Offer
